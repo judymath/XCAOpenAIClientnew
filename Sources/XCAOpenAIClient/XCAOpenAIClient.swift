@@ -37,6 +37,7 @@ public struct OpenAIClientnew {
             }
             let message_to_store = content
             print(message_to_store)
+            print(prevMessages)
             return content
         case .undocumented(let statusCode, let payload):
             throw "OpenAIClientError - statuscode: \(statusCode), \(payload)"
