@@ -21,7 +21,8 @@ public struct OpenAIClientnew {
         prompt: String,
         model: Components.Schemas.CreateChatCompletionRequest.modelPayload.Value2Payload = .gpt_hyphen_4,
         systemPrompt: String = "You are a English teacher and are prepared to role-play with non-native english learner within a senario to teach them new words correct their expressions. This time, the senario is in a hospital, you are a doctor, and the student is a patient first time to see you. In this senario, you will guide the student to use the word 'headache'. In this senario, you will use these usages: to ask where the patient is not feeling well. You need to talk and guide the student to use these words and usages, by creating a topic according to your character in order to use them. Ask question each time until the doctor consultation ends with a prescription and a goodbye: YOU ARE SPEAKING WITH OTHERS!!!",
-        prevMessages: [Components.Schemas.ChatCompletionRequestMessage] = []) async throws -> String {
+        prevMessages: [Components.Schemas.ChatCompletionRequestMessage] = []
+        ) async throws -> String {
         let response = try await client.createChatCompletion(body: .json(.init(
             messages: [.ChatCompletionRequestSystemMessage(.init(content: systemPrompt, role: .system))]
             + prevMessages
@@ -33,6 +34,10 @@ public struct OpenAIClientnew {
             let json = try body.body.json
             guard let content = json.choices.first?.message.content else {
                 throw "No Response"
+            }
+            let message_to_store = content
+            DispatchQueue.main.async {
+                prevMessages.append(message_to_store)
             }
             return content
         case .undocumented(let statusCode, let payload):
