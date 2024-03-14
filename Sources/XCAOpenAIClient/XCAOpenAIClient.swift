@@ -36,9 +36,7 @@ public struct OpenAIClientnew {
                 throw "No Response"
             }
             let message_to_store = content
-            DispatchQueue.main.async {
-                prevMessages.append(message_to_store)
-            }
+            print(message_to_store)
             return content
         case .undocumented(let statusCode, let payload):
             throw "OpenAIClientError - statuscode: \(statusCode), \(payload)"
